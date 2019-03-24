@@ -1,0 +1,28 @@
+{
+  "name": "owner-cli",
+  "version": "1.0.0",
+  "description": "myself cli",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "link": "npm link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZWkang/owner-cli.git"
+  },
+  "author": "ZWkang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZWkang/owner-cli/issues"
+  },
+  "homepage": "https://github.com/ZWkang/owner-cli#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^2.19.0"
+  },
+  "bin": {
+    "owner": "./index.js"
+  }
+}
