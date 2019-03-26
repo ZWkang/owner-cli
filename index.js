@@ -53,10 +53,10 @@ commander.command('downleetcode <leetcodeName>')
             console.log(chalk.red(' you must enter leetcode name \n downleetcode <leetcodeName>\n d <leetcodeName>'))
             return
         }
-        const { translatedContent, translatedTitle, questionFrontendId, titleSlug } = await new download({
-            name: leetcodeName
-        }).init()
         try {
+            const { translatedContent, translatedTitle, questionFrontendId, titleSlug } = await new download({
+                name: leetcodeName
+            }).init()
             const mdFileAndPath = process.cwd() + `/${questionFrontendId}.${translatedTitle}.md`
             const jsFileAndPath =  process.cwd() + `/${questionFrontendId}.${titleSlug}.js`
             fs.writeFileSync(mdFileAndPath, translatedContent)
