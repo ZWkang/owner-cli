@@ -5,11 +5,13 @@ const exec = require('child_process').exec
 const chalk = require('chalk')
 const fs = require('fs')
 const helpString = `
-|-----------------------------|
-|                             |
-|   -h --help show help list  |
-|                             |
-|-----------------------------|
+|-------------------------------|
+|                               |
+|   -h --help show help list    |
+|   npmpackage <package>        |
+|   downleetcode <leetcodeName> |
+|                               |
+|-------------------------------|
         @ZWkang author
 `
 
@@ -55,7 +57,7 @@ commander.command('downleetcode <leetcodeName>')
             name: leetcodeName
         }).init()
         try {
-            const filenameAndPath =__dirname + `/${questionFrontendId}_${translatedTitle}.md`
+            const filenameAndPath = process.cwd() + `/${questionFrontendId}.${translatedTitle}.md`
             fs.writeFileSync(filenameAndPath, translatedContent)
             console.log(chalk.green(`success create file: $`))
         }catch (e) {
