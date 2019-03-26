@@ -47,7 +47,7 @@ commander.command('npmpackage <package>')
 
 commander.command('downleetcode <leetcodeName>')
     .description('download your problem')
-    .alias('n')
+    .alias('dl')
     .action(async (leetcodeName, args) => {
         if(!leetcodeName) {
             console.log(chalk.red(' you must enter leetcode name \n downleetcode <leetcodeName>\n d <leetcodeName>'))
