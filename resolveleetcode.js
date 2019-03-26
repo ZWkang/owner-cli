@@ -10,7 +10,7 @@ const queryString = (titleSlug) => `
 const pTagReg = /(<p>)|(<\/p>)/g
 const codeTagReg = /(<code>)|(<\/code>)/g
 const strongTagReg = /(<strong>)|(<\/strong>)/g
-const preTagReg = /<\pre>|<\/pre>/g
+const preTagReg = /<pre>|<\/pre>/g
 
 const twon = /\n\n/g
 
