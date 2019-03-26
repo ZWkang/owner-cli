@@ -11,7 +11,11 @@ const pTagReg = /(<p>)|(<\/p>)/g
 const codeTagReg = /(<code>)|(<\/code>)/g
 const strongTagReg = /(<strong>)|(<\/strong>)/g
 const preTagReg = /<pre>|<\/pre>/g
-
+const aLinkTagReg = /<a.*?>|<\/a>/g
+const emTagReg = /<em>|<\/em>/g
+const nbsp = /&nbsp;/g
+const ldquo= /&ldquo;/g
+const rdquo = /&rdquo;/g
 const twon = /\n\n/g
 
 class download {
@@ -37,10 +41,20 @@ class download {
         // const nodes = select("//x:a/@href", doc);
         // return this.selectList.map(v => select(v, doc))
         // console.log(questionData)
-        let { translatedContent, translatedTitle, questionFrontendId } = questionData.data.question
-        translatedContent = translatedContent.replace(pTagReg, '\r\n').replace(codeTagReg, ' ').replace(strongTagReg, ' ').replace(twon, '\n').replace(preTagReg, '```\r\n')
+        let { translatedContent, translatedTitle, questionFrontendId, titleSlug } = questionData.data.question
+        translatedContent = translatedContent
+            .replace(pTagReg, '\r\n')
+            .replace(codeTagReg, ' ')
+            .replace(strongTagReg, ' ')
+            .replace(twon, '\n')
+            .replace(preTagReg, '```\r\n')
+            .replace(aLinkTagReg, '')
+            .replace(emTagReg, '')
+            .replace(nbsp, ' ')
+            .replace(ldquo, '“')
+            .replace(rdquo, '”')
         return {
-            translatedContent, translatedTitle, questionFrontendId
+            translatedContent, translatedTitle, questionFrontendId, titleSlug
         }
     }
     async init(){

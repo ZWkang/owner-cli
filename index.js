@@ -5,11 +5,13 @@ const exec = require('child_process').exec
 const chalk = require('chalk')
 const fs = require('fs')
 const helpString = `
-|-----------------------------|
-|                             |
-|   -h --help show help list  |
-|                             |
-|-----------------------------|
+|-------------------------------|
+|                               |
+|   -h --help show help list    |
+|   npmpackage <package>        |
+|   downleetcode <leetcodeName> |
+|                               |
+|-------------------------------|
         @ZWkang author
 `
 
@@ -45,19 +47,24 @@ commander.command('npmpackage <package>')
 
 commander.command('downleetcode <leetcodeName>')
     .description('download your problem')
-    .alias('n')
+    .alias('dl')
     .action(async (leetcodeName, args) => {
         if(!leetcodeName) {
             console.log(chalk.red(' you must enter leetcode name \n downleetcode <leetcodeName>\n d <leetcodeName>'))
             return
         }
-        const {translatedContent, translatedTitle, questionFrontendId} = await new download({
-            name: leetcodeName
-        }).init()
         try {
-            const filenameAndPath =__dirname + `/${questionFrontendId}_${translatedTitle}.md`
-            fs.writeFileSync(filenameAndPath, translatedContent)
-            console.log(chalk.green(`success create file: $`))
+            const { translatedContent, translatedTitle, questionFrontendId, titleSlug } = await new download({
+                name: leetcodeName
+            }).init()
+            const mdFileAndPath = process.cwd() + `/${questionFrontendId}.${translatedTitle}.md`
+            const jsFileAndPath =  process.cwd() + `/${questionFrontendId}.${titleSlug}.js`
+            fs.writeFileSync(mdFileAndPath, translatedContent)
+            fs.writeFileSync(jsFileAndPath, '')
+            console.log(chalk.green(`success create file: 
+                ${mdFileAndPath}
+                ${jsFileAndPath}
+            `))
         }catch (e) {
             console.log(chalk.red(`创建失败 \n${e.message}`))
         }
