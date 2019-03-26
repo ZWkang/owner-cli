@@ -1,0 +1,10 @@
+# dev环境文件夹
+node_modules
+
+
+# 常见bundle文件夹
+dist
+
+
+# 没必要
+package-lock.json
