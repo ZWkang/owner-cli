@@ -1,10 +1,4 @@
-const path = require('path')
 const request = require('request-promise')
-const PARSE5 = require('parse5')
-const xpath = require('xpath');
-const xmlser = require('xmlserializer');
-// const nodefetch = require('re qu zz z')
-const dom = require('xmldom').DOMParser;
 const selectList = [`//*[@id="question-detail-main-tabs"]/div[2]/div/div[1]/div`]
 
 
