@@ -61,7 +61,10 @@ commander.command('downleetcode <leetcodeName>')
             const jsFileAndPath =  process.cwd() + `/${questionFrontendId}.${titleSlug}.js`
             fs.writeFileSync(mdFileAndPath, translatedContent)
             fs.writeFileSync(jsFileAndPath, '')
-            console.log(chalk.green(`success create file: $`))
+            console.log(chalk.green(`success create file: 
+                ${mdFileAndPath}
+                ${jsFileAndPath}
+            `))
         }catch (e) {
             console.log(chalk.red(`创建失败 \n${e.message}`))
         }
