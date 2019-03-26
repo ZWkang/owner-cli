@@ -53,12 +53,14 @@ commander.command('downleetcode <leetcodeName>')
             console.log(chalk.red(' you must enter leetcode name \n downleetcode <leetcodeName>\n d <leetcodeName>'))
             return
         }
-        const {translatedContent, translatedTitle, questionFrontendId} = await new download({
+        const { translatedContent, translatedTitle, questionFrontendId, titleSlug } = await new download({
             name: leetcodeName
         }).init()
         try {
-            const filenameAndPath = process.cwd() + `/${questionFrontendId}.${translatedTitle}.md`
-            fs.writeFileSync(filenameAndPath, translatedContent)
+            const mdFileAndPath = process.cwd() + `/${questionFrontendId}.${translatedTitle}.md`
+            const jsFileAndPath =  process.cwd() + `/${questionFrontendId}.${titleSlug}.js`
+            fs.writeFileSync(mdFileAndPath, translatedContent)
+            fs.writeFileSync(jsFileAndPath, '')
             console.log(chalk.green(`success create file: $`))
         }catch (e) {
             console.log(chalk.red(`创建失败 \n${e.message}`))

@@ -37,10 +37,10 @@ class download {
         // const nodes = select("//x:a/@href", doc);
         // return this.selectList.map(v => select(v, doc))
         // console.log(questionData)
-        let { translatedContent, translatedTitle, questionFrontendId } = questionData.data.question
+        let { translatedContent, translatedTitle, questionFrontendId, titleSlug } = questionData.data.question
         translatedContent = translatedContent.replace(pTagReg, '\r\n').replace(codeTagReg, ' ').replace(strongTagReg, ' ').replace(twon, '\n').replace(preTagReg, '```\r\n')
         return {
-            translatedContent, translatedTitle, questionFrontendId
+            translatedContent, translatedTitle, questionFrontendId, titleSlug
         }
     }
     async init(){
