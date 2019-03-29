@@ -1,7 +1,7 @@
 const chalk = require('chalk')
 const request = require('request-promise')
 function calcSize(number) {
-    const arr = ['KB', 'MB', 'GB']
+    const arr = ['B','KB', 'MB', 'GB']
 
     let size = 0;
     while(number >= 1024) {
@@ -23,11 +23,11 @@ function fixData (data) {
     } = data
     return {
         name,
+        dependencyCount,
         version,
         size,
         gzip,
-        description,
-        dependencyCount
+        description
     }
 }
 
