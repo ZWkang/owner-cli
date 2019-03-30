@@ -2,6 +2,7 @@
 
 const commander = require('commander')
 const exec = require('child_process').exec
+const prettyLoggerSize = require('./prettyLoggerSize')
 const chalk = require('chalk')
 const fs = require('fs')
 const helpString = `
@@ -69,5 +70,29 @@ commander.command('downleetcode <leetcodeName>')
             console.log(chalk.red(`创建失败 \n${e.message}`))
         }
         return 
+    })
+
+commander.command('modules-compare [package...]')
+    .alias('mc')
+    .action(async (package, ...args)=>{
+        if(!package) {
+            console.log(chalk.red('no package name'))
+        }
+        try {
+            const map = package.map(v => {
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        const res = await new prettyLoggerSize(v).start()
+                        return resolve(res)
+                    }catch(e) {
+                        reject(e)
+                    }
+                })
+            })
+            const mapdata = await Promise.all(map)
+            console.table(mapdata)
+        }catch(e) {
+            console.log(chalk.red(`fail compare \n${e.message}`))
+        }
     })
 commander.parse(process.argv);
