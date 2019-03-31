@@ -10,6 +10,7 @@ class Reporter extends EventEmitter {
         super()
         this.handleError = handleError || noop
         this.on('reporter', this.onReporter);
+        this.on('success', this.onSuccess)
     }
     onReporter(error) {
         if(error instanceof Error) {
@@ -36,5 +37,5 @@ ERROR_STACK:
 
 // require('child_process').spawn('ls', ['-lh', '/var'])
 
-pipeSpawn('npm', 'underscore')
+// pipeSpawn('npm', 'underscore')
 module.exports = Reporter
