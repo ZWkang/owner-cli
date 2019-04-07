@@ -4,9 +4,10 @@ const report = require('./Reporter')
 
 const noop = () => {}
 
-const reporter = new report()
+const reporter = report
 
 module.exports = function (cmd, pack, opts, cb) {
+    
     // const opts = {packageManager: 'npm'}
     if(typeof opts === 'function') {
         cb = opts
@@ -26,7 +27,7 @@ module.exports = function (cmd, pack, opts, cb) {
         })
     }
 
-    const npmCmd = opt.command
+    let npmCmd = opts.command || 'npm'
 
     if(npmCmd) {
         npmCmd = process.platform === 'win32'
@@ -35,19 +36,19 @@ module.exports = function (cmd, pack, opts, cb) {
     }
 
     const isYarn = commandExists('yarn')
-    const option =  isYarn ? 'add' : 'install'
+    const option =  isYarn ? 'install' : 'install'
     
     packages = [option].concat(packages)
-    const cmd = isYarn ? 'yarn': 'npm'
+    cmd = isYarn ? 'npm': 'npm'
 
-    
+    // console.log(cmd, packages, opts)
     const sp = spawn(
         cmd,
-        obj,
-        otherarg
+        packages,
+        opts
     )
     sp.stdout.on('data', (data) => {
-        console.log(data.toString())
+        // console.log(data.toString())
     })
     sp.stderr.on('data', (data) => {
         reporter.emit('success', data)
@@ -55,7 +56,7 @@ module.exports = function (cmd, pack, opts, cb) {
     return new Promise((resolve, reject) => {
         sp.on('error', reject)
         sp.on('close', (code) => {
-            console.log(code)
+            // console.log(code)
             if(code != 0 ) { // 标准的退出信号量为0
                 // 234为无权限
                 return reject(new Error(code))
@@ -63,7 +64,7 @@ module.exports = function (cmd, pack, opts, cb) {
             return resolve()
         })
         sp.on('exit', (e) => {
-            console.log(e)
+            // console.log(e)
         })
     })
 }
