@@ -2,40 +2,55 @@ const EventEmitter = require('events').EventEmitter
 const dayjs = require('dayjs')
 const chalk = require('chalk')
 
-const pipeSpawn = require('./pipeSpawn')
-
+const log = console.log
 const noop = () => {}
+
 class Reporter extends EventEmitter {
     constructor(handleError){
         super()
         this.handleError = handleError || noop
-        this.on('reporter', this.onReporter);
-        this.on('success', this.onSuccess)
+        this.on('reporter', this.error)
+        this.on('error', this.error)
+        this.on('success', this.success)
+        this.on('warn', this.warn)
+        this.on('info', this.info)
+        this.on('debug', this.debug)
     }
-    onReporter(error) {
+    get date() {
+        return dayjs().format('YYYY-MM-DD HH:mm:ss')
+    }
+    error(error, ...message) {
         if(error instanceof Error) {
-            const nowDate = dayjs().format('YYYY-MM-DD HH:mm:ss')
             const logstring = `
-ERROR_TIME: ${nowDate}
 ERROR_MESSAGE: ${error.message}
 
 ERROR_STACK:
     ${error.stack}
             `
-            console.log(chalk.red(logstring))
+            log(chalk.red(`[${this.date}][error]: `), logstring)
             const result = this.handleError(error, logstring)
             return result
         }
-        // if(!(error instanceof Error)) {
-        //     console.log(chalk.red(`ERROR_MESSAGE: ${error}`))
-        // }
+        log(chalk.red(`[${this.date}][error]: `), error, ...message)
+        return this.handleError(error)
     }
-    onSuccess(message) {
-        console.log(chalk.green(message))
+    onSuccess(...args) {
+        log(chalk.green(`[${this.date}][success]: `), ...args)
+    }
+    success(...args) {
+        return this.onSuccess(...args)
+    }
+    info(...args) {
+        log(chalk.magenta(`[${this.date}][info]: `), ...args)
+    }
+    debug(...args) {
+        log(chalk.cyan(`[${this.date}][debug]: `), ...args)
+    }
+    warn(...args) {
+        console.warn(chalk.yellow(`[${this.date}][warn]: `), ...args)
     }
 }
 
-// require('child_process').spawn('ls', ['-lh', '/var'])
+const report = new Reporter()
 
-// pipeSpawn('npm', 'underscore')
-module.exports = Reporter
+module.exports = report
