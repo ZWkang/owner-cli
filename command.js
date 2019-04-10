@@ -3,24 +3,33 @@
 module.exports = {
   options: [
     {
-      description: "npm install package use npm package manager",
       command: "install <package>",
+      description: "npm install package use npm package manager",
       alias: "n",
-      options: ["-u, --uninstall", "uninstall package"],
-      action: 'filepath function'
+      option: ["-u, --uninstall", "uninstall package"],
+      action: './action.js installPackage'
     },
     {
-      description: "download leetcode problem in workshop",
       command: "downloadleetcode <leetcodeName>",
+      description: "download leetcode problem in workshop",
       alias: "dl",
-      options: [["-t, --type", "js,md,both"], ["-rt, --resolve", "default type is js file type"]],
-      action: "filepath function"
+      option: [["-t, --type", "js,md,both"], ["-rt, --resolve", "default type is js file type"]],
+      action: "./action.js downloadLeetcode"
     },
     {
+      command: 'modules-compare [package...]',
       description: "modules compare package size",
       alias: "mc",
-      command: "modules-compare [package...]",
-      options: []
+      
+      option: [],
+      action: "./action.js moduleCompare"
+    },
+    {
+      command: "rundev [cmd] [filename]",
+      description: "just run your code in command",
+      alias: "rd", 
+      action: "./action.js rundev",
+      option: ["-r, --isHackRequire", "is open hack config"]
     }
   ]
 }
