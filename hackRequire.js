@@ -5,13 +5,14 @@ const beforRequire = Module.prototype.require
 const Reporter = require('./Reporter')
 let alias
 
+const PATH = process.cwd() + '/.ownerrc'
+
 try {
     Reporter.info('hack require function !')
-    const ownerrcData = fs.readFileSync(process.cwd() + '/.ownerrc').toString();
+    const ownerrcData = fs.readFileSync(PATH).toString();
     alias = JSON.parse(ownerrcData).alias
     if (alias) {
         Module.prototype.require = function (path, ...args) {
-            Reporter.success(path)
             for(let i in alias) {
                 if(i instanceof RegExp) {
                     if( i.test(path) ) {
@@ -39,6 +40,7 @@ try {
 
 module.exports = {
     cancelHack: function () {
+        Reporter.info('already cancel hack require')
         Module.prototype.require = beforRequire
     }
 }
