@@ -4,6 +4,7 @@ const chalk = require('chalk')
 
 const log = console.log
 const noop = () => {}
+const isDef = v => v === void 666
 
 class Reporter extends EventEmitter {
     constructor(handleError){
@@ -22,7 +23,8 @@ class Reporter extends EventEmitter {
     }
     setOptions (options) {
         options = options || { logLevel: 3 }
-        this.logLevel = options.logLevel || 3
+        this.logLevel = isDef(options.logLevel) ? 3 : options.logLevel
+        console.log(this.logLevel, options)
     }
     error(error, ...message) {
         if(this.logLevel < 1) return
@@ -44,6 +46,7 @@ ERROR_STACK:
         log(chalk.green(`[${this.date}][success]: `), ...args)
     }
     success(...args) {
+        if(this.logLevel < 1) return
         return this.onSuccess(...args)
     }
     info(...args) {

@@ -1,4 +1,6 @@
 const request = require('request-promise')
+const spinner = require('./spinner')
+
 const selectList = [`//*[@id="question-detail-main-tabs"]/div[2]/div/div[1]/div`]
 
 
@@ -58,6 +60,7 @@ class download {
         }
     }
     async init(){
+        spinner.info('downloading ' + this.name)
         try {
             const question = queryString(this.name)
             const body = JSON.stringify(JSON.parse(question))
@@ -74,8 +77,14 @@ class download {
                 }
                 
             }).then(v => JSON.parse(v))
-            return this.parse(questionData)
+
+            const result = this.parse(questionData)
+
+            spinner.succeed('download succeed')
+
+            return result
         }catch(e) {
+            spinner.fail(e.message)
             throw e
         }
     }
