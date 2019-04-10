@@ -15,11 +15,17 @@ class Reporter extends EventEmitter {
         this.on('warn', this.warn)
         this.on('info', this.info)
         this.on('debug', this.debug)
+        this.logLevel = 3
     }
     get date() {
         return dayjs().format('YYYY-MM-DD HH:mm:ss')
     }
+    setOptions (options) {
+        options = options || { logLevel: 3 }
+        this.logLevel = options.logLevel || 3
+    }
     error(error, ...message) {
+        if(this.logLevel < 1) return
         if(error instanceof Error) {
             const logstring = `
 ERROR_MESSAGE: ${error.message}
@@ -41,14 +47,24 @@ ERROR_STACK:
         return this.onSuccess(...args)
     }
     info(...args) {
+        if(this.logLevel < 3) return
         log(chalk.magenta(`[${this.date}][info]: `), ...args)
     }
     debug(...args) {
+        if(this.logLevel < 3) return
         log(chalk.cyan(`[${this.date}][debug]: `), ...args)
     }
     warn(...args) {
+        if(this.logLevel < 2) return
         console.warn(chalk.yellow(`[${this.date}][warn]: `), ...args)
     }
+    clear() {
+        if (this.logLevel > 3) {
+          return;
+        }
+        // window只是清空当前的终端窗口
+        console.clear()
+      }
 }
 
 const report = new Reporter()
