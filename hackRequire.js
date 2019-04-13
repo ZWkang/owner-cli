@@ -1,14 +1,15 @@
-// const { alias } = require()
 const Module = require('module');
 const fs = require('fs')
 const beforRequire = Module.prototype.require
 //  // 劫持require 方法
 const Reporter = require('./Reporter')
-const report = new Reporter()
 let alias
 
+const PATH = process.cwd() + '/.ownerrc'
+
 try {
-    const ownerrcData = fs.readFileSync(process.cwd() + '/.ownerrc').toString();
+    Reporter.info('hack require function !')
+    const ownerrcData = fs.readFileSync(PATH).toString();
     alias = JSON.parse(ownerrcData).alias
     if (alias) {
         Module.prototype.require = function (path, ...args) {
@@ -20,7 +21,6 @@ try {
                     }
                 } else {
                     if (path.indexOf(i) > -1) {
-                        
                         path = path.replace(i, alias[i])
                         break
                     }
@@ -31,9 +31,18 @@ try {
         }
     }
 } catch(e){
-    report.emit('reporter', e)
+    // Reporter.emit('reporter', e)
+    Reporter.error(e)
 } finally {
-    
+    Reporter.info('hack require done!!')
+}
+
+
+module.exports = {
+    cancelHack: function () {
+        Reporter.info('already cancel hack require')
+        Module.prototype.require = beforRequire
+    }
 }
 
 

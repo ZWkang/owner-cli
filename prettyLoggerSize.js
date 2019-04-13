@@ -1,5 +1,7 @@
 const chalk = require('chalk')
 const request = require('request-promise')
+const Reporter = require('./Reporter')
+
 function calcSize(number) {
     const arr = ['B','KB', 'MB', 'GB']
 
@@ -44,9 +46,11 @@ class PrettyLoggerSize {
         return fixData(data)
     }
     handleError(error) {
-        console.log(chalk.red(error.message))
+        // console.log(chalk.red(error.message))
+        Reporter.error(error.message)
         console.log('\n')
-        console.log(chalk.red(error.statck))
+        // console.log(chalk.red(error.statck))
+        Reporter.error(error.stack)
         process.exit(1)
     }
     async downloadJson (name) {

@@ -2,39 +2,74 @@ const EventEmitter = require('events').EventEmitter
 const dayjs = require('dayjs')
 const chalk = require('chalk')
 
-const pipeSpawn = require('./pipeSpawn')
-
+const log = console.log
 const noop = () => {}
+const isDef = v => v === void 666
+
 class Reporter extends EventEmitter {
     constructor(handleError){
         super()
         this.handleError = handleError || noop
-        this.on('reporter', this.onReporter);
+        this.on('reporter', this.error)
+        this.on('error', this.error)
+        this.on('success', this.success)
+        this.on('warn', this.warn)
+        this.on('info', this.info)
+        this.on('debug', this.debug)
+        this.logLevel = 3
     }
-    onReporter(error) {
+    get date() {
+        return dayjs().format('YYYY-MM-DD HH:mm:ss')
+    }
+    setOptions (options) {
+        options = options || { logLevel: 3 }
+        this.logLevel = isDef(options.logLevel) ? 3 : options.logLevel
+        console.log(this.logLevel, options)
+    }
+    error(error, ...message) {
+        if(this.logLevel < 1) return
         if(error instanceof Error) {
-            const nowDate = dayjs().format('YYYY-MM-DD HH:mm:ss')
             const logstring = `
-ERROR_TIME: ${nowDate}
 ERROR_MESSAGE: ${error.message}
 
 ERROR_STACK:
     ${error.stack}
             `
-            console.log(chalk.red(logstring))
+            log(chalk.red(`[${this.date}][error]: `), logstring)
             const result = this.handleError(error, logstring)
             return result
         }
-        // if(!(error instanceof Error)) {
-        //     console.log(chalk.red(`ERROR_MESSAGE: ${error}`))
-        // }
+        log(chalk.red(`[${this.date}][error]: `), error, ...message)
+        return this.handleError(error)
     }
-    onSuccess(message) {
-        console.log(chalk.green(message))
+    onSuccess(...args) {
+        log(chalk.green(`[${this.date}][success]: `), ...args)
     }
+    success(...args) {
+        if(this.logLevel < 1) return
+        return this.onSuccess(...args)
+    }
+    info(...args) {
+        if(this.logLevel < 3) return
+        log(chalk.magenta(`[${this.date}][info]: `), ...args)
+    }
+    debug(...args) {
+        if(this.logLevel < 3) return
+        log(chalk.cyan(`[${this.date}][debug]: `), ...args)
+    }
+    warn(...args) {
+        if(this.logLevel < 2) return
+        console.warn(chalk.yellow(`[${this.date}][warn]: `), ...args)
+    }
+    clear() {
+        if (this.logLevel > 3) {
+          return;
+        }
+        // window只是清空当前的终端窗口
+        console.clear()
+      }
 }
 
-// require('child_process').spawn('ls', ['-lh', '/var'])
+const report = new Reporter()
 
-pipeSpawn('npm', 'underscore')
-module.exports = Reporter
+module.exports = report
