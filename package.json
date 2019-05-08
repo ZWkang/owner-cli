@@ -26,10 +26,5 @@
   },
   "bin": {
     "owner": "./index.js"
-  },
-  "devDependencies": {
-    "koa": "^2.7.0",
-    "koa-router": "^7.4.0",
-    "two-sum": "^1.0.0"
   }
 }
