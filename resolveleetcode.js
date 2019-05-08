@@ -45,16 +45,16 @@ class download {
         // console.log(questionData)
         let { translatedContent, translatedTitle, questionFrontendId, titleSlug } = questionData.data.question
         translatedContent = translatedContent
-            .replace(pTagReg, '\r\n')
-            .replace(codeTagReg, ' ')
-            .replace(strongTagReg, ' ')
-            .replace(twon, '\n')
-            .replace(preTagReg, '```\r\n')
-            .replace(aLinkTagReg, '')
-            .replace(emTagReg, '')
-            .replace(nbsp, ' ')
-            .replace(ldquo, '“')
-            .replace(rdquo, '”')
+            // .replace(pTagReg, '\r\n')
+            // .replace(codeTagReg, ' ')
+            // .replace(strongTagReg, '**')
+            // .replace(twon, '\n')
+            // .replace(preTagReg, '```\r\n')
+            // .replace(aLinkTagReg, '')
+            // .replace(emTagReg, '')
+            // .replace(nbsp, ' ')
+            // .replace(ldquo, '“')
+            // .replace(rdquo, '”')
         return {
             translatedContent, translatedTitle, questionFrontendId, titleSlug
         }
