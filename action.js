@@ -11,6 +11,7 @@ const installPackageString = (name) => `npm install ${name} --save-dev`
 const uninstallPackageString = (name) => `npm uninstall ${name}`
 
 const download = require('./resolveleetcode')
+const handleCreateAgamennonFile = require('./handleCreateAgamennonFile')
 
 const handleNormalCallback = (error, data) => {
     if(error){
@@ -85,6 +86,9 @@ module.exports = {
             cmd: cmd,
             isHack: isHackRequire
         }).start()
-    }
+    },
 
+    acreate: (name) => {
+        handleCreateAgamennonFile(name)
+    }
 }

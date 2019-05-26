@@ -30,6 +30,12 @@ module.exports = {
       alias: "rd", 
       action: "./action.js rundev",
       option: ["-r, --isHackRequire", "is open hack config"]
+    },
+    {
+      command: "acreate [filename]",
+      description: "just use in agamennon ok?",
+      alias: "ac", 
+      action: "./action.js acreate",
     }
   ]
 }
