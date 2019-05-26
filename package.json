@@ -19,10 +19,15 @@
   },
   "homepage": "https://github.com/ZWkang/owner-cli#readme",
   "dependencies": {
+    "chalk": "^2.4.2",
+    "command-exists": "^1.2.8",
     "commander": "^2.19.0",
+    "dayjs": "^1.8.14",
+    "mkdirp": "^0.5.1",
+    "ora": "^3.4.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "chalk": "^2.4.2"
+    "rimraf": "^2.6.3"
   },
   "bin": {
     "owner": "./index.js"
