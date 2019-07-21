@@ -43,13 +43,14 @@ class download {
     // const select = xpath.useNamespaces({"x": "http://www.w3.org/1999/xhtml"});
     // const nodes = select("//x:a/@href", doc);
     // return this.selectList.map(v => select(v, doc))
-    // console.log(questionData)
     let {
       translatedContent,
       translatedTitle,
       questionFrontendId,
       titleSlug,
-      codeSnippets
+      codeSnippets,
+      questionId,
+      difficulty
     } = questionData.data.question;
     translatedContent = translatedContent;
     // .replace(pTagReg, '\r\n')
@@ -67,11 +68,14 @@ class download {
       translatedTitle,
       questionFrontendId,
       titleSlug,
-      codeSnippets
+      codeSnippets,
+      questionId,
+      difficulty
     };
   }
   async init() {
     spinner.info("downloading " + this.name);
+
     try {
       const question = queryString(this.name);
       const body = JSON.stringify(JSON.parse(question));
