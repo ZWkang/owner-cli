@@ -9,9 +9,37 @@ const installPackage = require("./installPackage");
 
 const installPackageString = name => `npm install ${name} --save-dev`;
 const uninstallPackageString = name => `npm uninstall ${name}`;
-
+const Reporter = require("./Reporter");
+const codeSnippetsMaps = require("./codesnippets.json");
 const download = require("./resolveleetcode");
 const handleCreateAgamennonFile = require("./handleCreateAgamennonFile");
+const markLeetcodeDownload = require("./leetcodedownloadCache");
+
+/**
+ * 展示codeSnippets json内容
+ */
+function doWithDisplayCodeSnippetsTypes() {
+  /**
+   * 获得键
+   */
+  const MapsKeys = Object.keys(codeSnippetsMaps);
+  // 想将其进行字符串大小依次输出 （比较好看）
+  const sortedMapsKeys = MapsKeys.sort((a, b) => a.length - b.length);
+  // 计算最长字符串，用于后面填充
+  const LongestString = sortedMapsKeys[sortedMapsKeys.length - 1];
+  // 拿到最长字符串长度
+  const LongestLength = LongestString.length;
+  // 获得输出字符串
+  const displayContent = Array.from(sortedMapsKeys).reduce((prev, next) => {
+    const nextLength = next.length;
+    // 用最长依次遍历时候计算repeat空格即可
+    const fixedSpace = " ".repeat(LongestLength - nextLength + 1);
+    const [Lang, filetype] = codeSnippetsMaps[next];
+    return `${prev}\n${next}${fixedSpace}: Lang is ${Lang}, demo file type is ${filetype}`;
+  }, "");
+  // 输出一下
+  Reporter.info(displayContent);
+}
 
 const handleNormalCallback = (error, data) => {
   if (error) {
@@ -30,7 +58,11 @@ module.exports = {
   },
 
   downloadLeetcode: async (leetcodeName, args) => {
-    const defaultLang = "JavaScript";
+    const { savefile, type = "js", notetype = "md", codeSnippet } = args;
+    const [defaultLang, actualDemoFileType] = codeSnippetsMaps[type] || [
+      "JavaScript",
+      "js"
+    ];
     if (!leetcodeName) {
       console.log(
         chalk.red(
@@ -39,38 +71,62 @@ module.exports = {
       );
       return;
     }
+    if (codeSnippet) {
+      doWithDisplayCodeSnippetsTypes();
+      return;
+    }
     try {
       const {
         translatedContent,
         translatedTitle,
         questionFrontendId,
         titleSlug,
-        codeSnippets
+        codeSnippets,
+        questionId,
+        difficulty
       } = await new download({
         name: leetcodeName
       }).init();
-      const jsSnippets = codeSnippets.filter(item => item.lang === defaultLang);
-      const { code: jsFileContent } = jsSnippets[0];
+
+      const Snippets = codeSnippets.filter(item => item.lang === defaultLang);
+      const { code: jsFileContent } = Snippets[0];
       const mdFileAndPath =
-        process.cwd() + `/${questionFrontendId}.${translatedTitle}.md`;
+        process.cwd() + `/${questionFrontendId}.${translatedTitle}.${notetype}`;
       const jsFileAndPath =
-        process.cwd() + `/${questionFrontendId}.${titleSlug}.js`;
+        process.cwd() +
+        `/${questionFrontendId}.${titleSlug}.${actualDemoFileType}`;
+
+      const mdFileAndPathExist = fs.existsSync(mdFileAndPath);
+      const jsFileAndPathExist = fs.existsSync(jsFileAndPath);
+      // 避免覆盖掉原有文件
+      if (mdFileAndPathExist || jsFileAndPathExist) {
+        // throw new Error(`${mdFileAndPath}\nor\n${jsFileAndPath}\nexist`);
+      }
+      // 同步写入文件
       fs.writeFileSync(mdFileAndPath, translatedContent);
       fs.writeFileSync(jsFileAndPath, jsFileContent);
-      console.log(
-        chalk.green(`success create file: 
+      if (savefile) {
+        markLeetcodeDownload({
+          filename: savefile || "markleetcode.md",
+          rootPath: process.cwd(),
+          translatedTitle,
+          questionId,
+          titleSlug,
+          difficulty
+        });
+      }
+
+      Reporter.success(`success create file: 
                 ${mdFileAndPath}
                 ${jsFileAndPath}
-            `)
-      );
+            `);
     } catch (e) {
-      console.log(chalk.red(`创建失败 \n${e.message}`));
+      Reporter.error(chalk.red(`创建失败 \n${e.message}`));
     }
     return;
   },
 
   moduleCompare: async (package, ...args) => {
-    console.log(package);
     if (!package) {
       console.log(chalk.red("no package name"));
     }

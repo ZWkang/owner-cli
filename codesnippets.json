@@ -1,0 +1,16 @@
+{
+    "cpp": ["C++", "cpp"],
+    "java": ["Java", "java"],
+    "python": ["Python", "py"],
+    "python3": ["Python3", "py"],
+    "c": ["C", "c"],
+    "csharp": ["C#", "cs"],
+    "javascript": ["JavaScript", "js"],
+    "php": ["PHP", "php"],
+    "rust": ["Rust", "rs"],
+    "kotlin": ["Kotlin", "kt"],
+    "scala": ["Scala", "scala"],
+    "golang": ["Go", "go"],
+    "swift": ["Swift", "swift"],
+    "ruby": ["Ruby", "rb"]
+}
